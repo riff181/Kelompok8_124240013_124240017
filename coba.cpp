@@ -7,4 +7,5 @@ int main() {
     cin >> coba;
     cout << "Syarifah Khaerunnisa" << endl;
     cout << "Tiara" << endl;
+    cout << "Halo" << endl;
 }
