@@ -231,6 +231,7 @@ void hapusBuku() {
         curr = curr->next; 
     }
     file.close(); 
+}
 
 int main() {
     while (!login()) {
