@@ -161,3 +161,142 @@ void cariBuku() {
     if (!ditemukan) 
         cout << "Buku dengan kode tersebut tidak ditemukan.\n";
 }
+
+void urutBuku() {
+    if (head == nullptr || head->next == nullptr) return;
+
+    bool swapped;
+    do {
+        swapped = false; 
+        Buku* curr = head; 
+        Buku* prev = nullptr; 
+
+        while (curr->next != nullptr) {
+            if (curr->judul > curr->next->judul) {
+                Buku* nextNode = curr->next; 
+                curr->next = nextNode->next; 
+                nextNode->next = curr; 
+
+                if (prev == nullptr) {
+                    head = nextNode; 
+                } else {
+                    prev->next = nextNode; 
+                }
+                swapped = true; 
+                prev = nextNode; 
+            } else {
+                prev = curr; 
+                curr = curr->next; 
+            }
+        }
+    } while (swapped);
+    cout << "Data buku berhasil diurutkan berdasarkan judul.\n";
+}
+
+void hapusBuku() {
+    if (head == nullptr) {
+        cout << "Data buku kosong.\n";
+        return;
+    }
+
+    string kodeHapus;
+    cout << "Masukkan kode buku yang ingin dihapus: ";
+    cin >> kodeHapus;
+
+    Buku* temp = head; 
+    Buku* prev = nullptr; 
+    while (temp != nullptr && temp->kode != kodeHapus) {
+        prev = temp; 
+        temp = temp->next; 
+    }
+
+    if (temp == nullptr) {
+        cout << "Buku dengan kode tersebut tidak ditemukan.\n";
+        return;
+    }
+
+    if (prev == nullptr) {
+        head = head->next; 
+    } else {
+        prev->next = temp->next;
+    }
+
+    delete temp; 
+    cout << "Buku berhasil dihapus.\n";
+
+    ofstream file(namaFileGlobal); 
+    Buku* curr = head; 
+    while (curr != nullptr) {
+        file << curr->kode << "|" << curr->judul << "|" << curr->pengarang << "|" << curr->tahun << endl;
+        curr = curr->next; 
+    }
+    file.close(); 
+
+int main() {
+    while (!login()) {
+        cout << "Silakan coba lagi.\n\n";
+    }
+
+    int pilihan;
+    do {
+        cout << "\n=== MENU PERPUSTAKAAN MINI ===\n";
+        cout << "1. Tambah Buku\n";
+        cout << "2. Tampilkan Buku\n";
+        cout << "3. Cari Buku\n";     
+        cout << "4. Urutkan Buku\n";
+        cout << "5. Hapus Buku\n";  
+        cout << "6. Keluar\n";
+        cout << "Pilih menu: ";
+        cin >> pilihan;
+
+        string ulang;
+        switch (pilihan) {
+            case 1:
+                tentukanNamaFile(); 
+                do {
+                    int jumlah;
+                    cout << "Berapa banyak buku yang ingin ditambahkan? ";
+                    cin >> jumlah;
+                    tambahBuku(jumlah); 
+                    cout << "Ingin menambahkan lagi? (y/n): ";
+                    cin >> ulang;
+                } while (ulang == "y");
+                break;
+
+            case 2:
+                tentukanNamaFile(); 
+                muatDariFile();     
+                tampilkanBuku(); 
+                break;
+
+            case 3:
+                tentukanNamaFile(); 
+                muatDariFile(); 
+                cariBuku(); 
+                break;
+                
+            case 4:
+                tentukanNamaFile(); 
+                muatDariFile(); 
+                urutBuku(); 
+                tampilkanBuku(); 
+                break;
+
+            case 5:
+                tentukanNamaFile(); 
+                muatDariFile(); 
+                hapusBuku(); 
+                tampilkanBuku(); 
+                break;
+
+            case 6:
+                cout << "Terima kasih!\n"; 
+                break;
+
+            default:
+                break;
+        }
+    } while (pilihan != 6);
+
+    return 0;
+}
