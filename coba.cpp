@@ -6,4 +6,5 @@ int main() {
     cout << "AAA: ";
     cin >> coba;
     cout << "Syarifah Khaerunnisa" << endl;
+    cout << "Tiara" << endl;
 }
